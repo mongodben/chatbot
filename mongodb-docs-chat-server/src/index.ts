@@ -2,7 +2,7 @@
   @fileoverview This file contains the implementation of the MongoDB Docs AI chat server.
  */
 import "dotenv/config";
-import { makeApp } from "./app";
+import { makeApp } from "chat-server/app";
 import { logger } from "chat-core";
 import { CORE_ENV_VARS, assertEnvVars } from "chat-core";
 export const {
