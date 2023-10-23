@@ -14,6 +14,7 @@ import {
   AddApiConversationMessageParams,
   BaseMessage,
 } from "./ApiConversations";
+import { FunctionDefinition } from "@azure/openai";
 
 /**
   Create {@link ApiConversationsService} that uses MongoDB as a data store.
@@ -53,8 +54,12 @@ export function makeMongoDbApiConversationsService(
       conversationId,
       message,
       newSystemPrompt,
+      availableFunctions,
     }: AddApiConversationMessageParams) {
-      let newMessage = createDatabaseMessageFromOpenAiChatMessage(message);
+      let newMessage = createDatabaseMessageFromOpenAiChatMessage(
+        message,
+        availableFunctions
+      );
       await mongoClient.withSession(async (session) => {
         await session.withTransaction(async () => {
           const currentSystemPrompt = await getSystemPrompt(
@@ -167,11 +172,13 @@ async function getSystemPrompt(
     Helper function. Create a {@link Message} object from the {@link BaseMessage} object.
    */
 function createDatabaseMessageFromOpenAiChatMessage(
-  message: BaseMessage
+  message: BaseMessage,
+  availableFunctions: FunctionDefinition[]
 ): SomeMessage {
   return {
     id: new ObjectId(),
     createdAt: new Date(),
+    availableFunctions,
     ...message,
   } as SomeMessage;
 }
