@@ -1,11 +1,10 @@
-import { ObjectId, References } from "chat-core";
+import { ObjectId } from "chat-core";
 import {
   CreateConversationParams,
   FindByIdParams,
   RateMessageParams,
   SomeMessage,
 } from "./conversations";
-import { OpenAiMessageRole } from "./ChatLlm";
 
 /**
   Conversation between the user and the API chatbot.
@@ -20,29 +19,29 @@ export interface ApiConversation {
   createdAt: Date;
 }
 
-// TODO: expand
-interface AddApiConversationMessageParams<T> {
-  conversationId: ObjectId;
-  content: string;
-  preprocessedContent?: string;
-  role: OpenAiMessageRole;
-  references?: References;
-  /**
-    Api-specifc credentials for the chatbot to use when interacting with the API.
-   */
-  credentials: T;
-  /**
-    The vector representation of the message content.
-     */
-  embedding?: number[];
+export type BaseMessage = Omit<
+  SomeMessage,
+  "id" | "createdAt" | "systemPrompt"
+>;
 
-  rejectQuery?: boolean;
+export interface AddApiConversationMessageParams {
+  conversationId: ObjectId;
+  /**
+    Message to append to the conversation.
+  */
+  message: BaseMessage;
+  /**
+    New system prompt that replaces the existing system prompt.
+    If you want to store the existing system prompt, you must include it in the
+    {@link SomeMessage.systemPrompt} field of the `message` property.
+   */
+  newSystemPrompt?: string;
 }
 
-export interface ConversationsService<T> {
+export interface ApiConversationsService {
   create: ({ ipAddress }: CreateConversationParams) => Promise<ApiConversation>;
-  addConversationMessage: (
-    params: AddApiConversationMessageParams<T>
+  addApiConversationMessage: (
+    params: AddApiConversationMessageParams
   ) => Promise<SomeMessage>;
   findById: ({ _id }: FindByIdParams) => Promise<ApiConversation | null>;
   rateMessage: ({
