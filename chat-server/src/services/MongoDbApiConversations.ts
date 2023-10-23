@@ -22,7 +22,8 @@ import { FunctionDefinition } from "@azure/openai";
 export function makeMongoDbApiConversationsService(
   mongoClient: MongoClient,
   databaseName: string,
-  initialSystemPrompt: SystemPrompt
+  initialSystemPrompt: SystemPrompt,
+  initialFunctions: FunctionDefinition[]
 ): ApiConversationsService {
   const conversationsCollection = mongoClient
     .db(databaseName)
@@ -33,7 +34,10 @@ export function makeMongoDbApiConversationsService(
         _id: new ObjectId(),
         ipAddress,
         messages: [
-          createDatabaseMessageFromOpenAiChatMessage(initialSystemPrompt),
+          createDatabaseMessageFromOpenAiChatMessage(
+            initialSystemPrompt,
+            initialFunctions
+          ),
         ],
         createdAt: new Date(),
       };
