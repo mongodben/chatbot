@@ -1,11 +1,11 @@
 export type HttpVerb =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "DELETE"
-  | "PATCH"
-  | "HEAD"
-  | "OPTIONS";
+  | "get"
+  | "post"
+  | "put"
+  | "delete"
+  | "patch"
+  | "head"
+  | "options";
 
 export interface OpenApiEndpointDefinition {
   parameters?: Record<string, unknown>[];
