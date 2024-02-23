@@ -32,12 +32,13 @@
     "format": "prettier ./src --write",
     "format:check": "prettier ./src --check",
     "lint": "eslint ./src --ext js,jsx,ts,tsx --report-unused-disable-directives",
-    "test": "jest --forceExit",
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --forceExit",
     "release": "release-it"
   },
   "dependencies": {
     "@azure/openai": "^1.0.0-beta.5",
     "@langchain/core": "^0.1.25",
+    "@xenova/transformers": "^2.15.1",
     "common-tags": "^1.8.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
